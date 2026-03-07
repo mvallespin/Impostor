@@ -2,6 +2,52 @@ import { useState, useEffect, useCallback } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { GameSettings, WordPackage } from '../App'
 
+// Default packages - same as in PackageSelectionScreen
+const DEFAULT_PACKAGES: WordPackage[] = [
+  {
+    id: 'animals',
+    name: 'Animales',
+    words: ['Perro', 'Gato', 'Elefante', 'León', 'Pingüino', 'Delfín', 'Águila', 'Serpiente'],
+    isCustom: false,
+    selected: false,
+  },
+  {
+    id: 'movies',
+    name: 'Películas',
+    words: ['Avatar', 'Titanic', 'Inception', 'Matrix', 'Interestelar', 'Gladiador', 'Shrek', 'Toy Story'],
+    isCustom: false,
+    selected: false,
+  },
+  {
+    id: 'food',
+    name: 'Comida',
+    words: ['Pizza', 'Sushi', 'Hamburguesa', 'Pasta', 'Tacos', 'Ramen', 'Sopa', 'Ensalada'],
+    isCustom: false,
+    selected: false,
+  },
+  {
+    id: 'places',
+    name: 'Lugares',
+    words: ['Playa', 'Montaña', 'Castillo', 'Bosque', 'Desierto', 'Cueva', 'Isla', 'Volcán'],
+    isCustom: false,
+    selected: false,
+  },
+  {
+    id: 'jobs',
+    name: 'Trabajos',
+    words: ['Abogado', 'Programador', 'Chef', 'Astronauta', 'Piloto', 'Docente', 'Médico', 'Veterinario'],
+    isCustom: false,
+    selected: false,
+  },
+  {
+    id: 'sports',
+    name: 'Deportes',
+    words: ['Fútbol', 'Baloncesto', 'Natación', 'Tenis', 'Golf', 'Esquí', 'Surf', 'Boxeo'],
+    isCustom: false,
+    selected: false,
+  },
+]
+
 interface GamePlayScreenProps {
   settings: GameSettings
   selectedPackageIds: string[]
@@ -31,10 +77,13 @@ function GamePlayScreen({
 
   // Initialize game on mount
   useEffect(() => {
+    // Combine DEFAULT_PACKAGES and custom packages
+    const allPackages = [...DEFAULT_PACKAGES, ...packages]
+    
     // Get all words from selected packages
     const wordsSet = new Set<string>()
     selectedPackageIds.forEach(id => {
-      const pkg = packages.find(p => p.id === id)
+      const pkg = allPackages.find(p => p.id === id)
       if (pkg) {
         pkg.words.forEach(w => wordsSet.add(w))
       }
