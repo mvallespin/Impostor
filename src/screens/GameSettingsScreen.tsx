@@ -152,18 +152,18 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   }
 
   return (
-    <div className="h-screen bg-impostor-cream p-4 flex flex-col">
-      <h1 className="text-4xl font-bold text-impostor-red text-center mb-3">
-        El Impostor
-      </h1>
+    <div className="h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
+      <div className="w-full max-w-sm">
+        <h1 className="text-4xl font-bold text-impostor-red text-center mb-6">
+          El Impostor
+        </h1>
 
-      <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full">
-        <div className="space-y-4">
+        <div className="space-y-3 mb-6">
           {/* Players */}
-          <div className="bg-impostor-cream-dark rounded-xl p-6 border border-impostor-red/10">
-            <div className="text-center mb-4">
-              <p className="text-impostor-text-secondary text-sm font-semibold mb-2">Jugadores</p>
-              <p className="text-6xl font-black text-impostor-red">{settings.numPlayers}</p>
+          <div className="bg-impostor-cream-dark rounded-xl p-5 border border-impostor-red/10">
+            <div className="text-center mb-3">
+              <p className="text-impostor-text-secondary text-sm font-semibold">Jugadores</p>
+              <p className="text-5xl font-black text-impostor-red">{settings.numPlayers}</p>
             </div>
             <button
               onClick={() => setShowPlayerNameInput(true)}
@@ -174,11 +174,11 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
           </div>
 
           {/* Impostors */}
-          <div className="bg-impostor-cream-dark rounded-xl p-6 border border-impostor-red/10">
-            <label className="block text-impostor-text text-sm font-semibold mb-4 text-center">
+          <div className="bg-impostor-cream-dark rounded-xl p-5 border border-impostor-red/10">
+            <label className="block text-impostor-text text-sm font-semibold mb-3 text-center">
               Impostores
             </label>
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-4">
               <button
                 onClick={() =>
                   setSettings(prev => ({
@@ -190,7 +190,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
               >
                 <Minus size={24} />
               </button>
-              <span className="text-6xl font-black text-impostor-red w-20 text-center">
+              <span className="text-5xl font-black text-impostor-red flex-1 text-center">
                 {settings.numImpostors}
               </span>
               <button
