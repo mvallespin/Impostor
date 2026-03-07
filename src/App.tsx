@@ -64,10 +64,6 @@ function App() {
     setCurrentScreen('settings')
   }
 
-  const handleBackToPackages = () => {
-    setCurrentScreen('packages')
-  }
-
   const handleAddCustomPackage = (name: string, words: string[]) => {
     const newPackage: WordPackage = {
       id: `custom_${Date.now()}`,
@@ -105,7 +101,7 @@ function App() {
           settings={gameSettings}
           selectedPackageIds={selectedPackages}
           packages={wordPackages}
-          onBack={handleBackToPackages}
+          onBack={handleBackToSettings}
         />
       )}
     </div>

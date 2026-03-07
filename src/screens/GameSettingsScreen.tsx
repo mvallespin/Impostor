@@ -110,7 +110,12 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
     return (
       <div className="min-h-screen bg-impostor-cream p-4 flex flex-col">
         <button
-          onClick={() => setShowPlayerNameInput(false)}
+          onClick={() => {
+            // Restore playerNames to last saved state
+            setPlayerNames(settings.players.length > 0 ? settings.players : [])
+            setCurrentPlayerName('')
+            setShowPlayerNameInput(false)
+          }}
           className="self-start text-impostor-red hover:text-impostor-red-light mb-6"
         >
           <X size={24} />
@@ -161,7 +166,12 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
 
           <div className="flex gap-2 mt-auto">
             <button
-              onClick={() => setShowPlayerNameInput(false)}
+              onClick={() => {
+                // Restore playerNames to last saved state
+                setPlayerNames(settings.players.length > 0 ? settings.players : [])
+                setCurrentPlayerName('')
+                setShowPlayerNameInput(false)
+              }}
               className="flex-1 bg-white hover:bg-impostor-cream-dark text-impostor-red border border-impostor-red rounded-lg py-3 font-bold"
             >
               Cancelar
