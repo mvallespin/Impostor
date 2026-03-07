@@ -129,46 +129,46 @@ function GamePlayScreen({
   // Reveal screen - each player sees their word
   if (gameState === 'reveal') {
     return (
-      <div className="min-h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
-        <div className="max-w-md w-full">
+      <div className="h-screen bg-impostor-cream p-3 flex flex-col justify-between items-center overflow-hidden">
+        <div className="flex-1 flex flex-col justify-center items-center w-full max-w-md">
           {showWord ? (
             <>
-              <div className="bg-white rounded-3xl p-8 text-center mb-8 border-2 border-impostor-red">
+              <div className="bg-white rounded-2xl p-5 text-center mb-4 border-2 border-impostor-red w-full">
                 {isImpostor ? (
                   <div>
-                    <p className="text-impostor-text-secondary text-sm font-semibold mb-4">TÚ ERES</p>
-                    <p className="text-5xl font-black text-impostor-red">IMPOSTOR</p>
+                    <p className="text-impostor-text-secondary text-xs font-semibold mb-2">TÚ ERES</p>
+                    <p className="text-4xl sm:text-5xl font-black text-impostor-red">IMPOSTOR</p>
                   </div>
                 ) : (
                   <div>
-                    <p className="text-impostor-text-secondary text-xs font-semibold mb-3">LA PALABRA SECRETA ES:</p>
-                    <p className="text-5xl font-black text-impostor-text break-words">{currentWord}</p>
+                    <p className="text-impostor-text-secondary text-xs font-semibold mb-2">LA PALABRA ES:</p>
+                    <p className="text-3xl sm:text-5xl font-black text-impostor-text break-words line-clamp-3">{currentWord}</p>
                   </div>
                 )}
               </div>
 
               <button
                 onClick={handleNextPlayer}
-                className={`w-full py-4 rounded-xl font-bold text-lg transition ${
+                className={`w-full py-3 rounded-xl font-bold text-sm sm:text-base transition ${
                   currentPlayerIndex === playerIndices.length - 1
                     ? 'bg-impostor-red hover:bg-impostor-red-light text-white'
                     : 'bg-impostor-red hover:bg-impostor-red-light text-white'
                 }`}
               >
-                {currentPlayerIndex === playerIndices.length - 1 ? 'Iniciar Debate' : 'Pasar al Siguiente Jugador'}
+                {currentPlayerIndex === playerIndices.length - 1 ? 'Iniciar Debate' : 'Siguiente'}
               </button>
             </>
           ) : (
             <>
-              <div className="text-center mb-8">
-                <p className="text-impostor-text-secondary text-sm font-semibold mb-4">Turno de:</p>
-                <p className="text-5xl font-black text-impostor-red mb-8">{currentPlayer}</p>
-                <p className="text-impostor-text text-lg mb-6">¿Preparado para ver tu rol?</p>
+              <div className="text-center">
+                <p className="text-impostor-text-secondary text-xs font-semibold mb-2">Turno de:</p>
+                <p className="text-3xl sm:text-4xl font-black text-impostor-red mb-4">{currentPlayer}</p>
+                <p className="text-impostor-text text-sm mb-4">¿Preparado?</p>
               </div>
 
               <button
                 onClick={handleViewWord}
-                className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+                className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-3 rounded-xl text-base transition"
               >
                 Ver Palabra/Rol
               </button>
@@ -176,8 +176,8 @@ function GamePlayScreen({
           )}
         </div>
 
-        <p className="text-impostor-text-secondary text-xs mt-12 text-center">
-          Jugador {currentPlayerIndex + 1} de {playerIndices.length}
+        <p className="text-impostor-text-secondary text-xs text-center pb-2">
+          {currentPlayerIndex + 1}/{playerIndices.length}
         </p>
       </div>
     )
@@ -186,55 +186,55 @@ function GamePlayScreen({
   // Debate screen
   if (gameState === 'debate') {
     return (
-      <div className="min-h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
-        <div className="max-w-md w-full text-center">
-          <h1 className="text-4xl font-bold text-impostor-red mb-8">¡En Debate!</h1>
-          <p className="text-impostor-text text-lg mb-12">
-            Identificad al Impostor entre vosotros antes de que pase el tiempo
+      <div className="h-screen bg-impostor-cream p-3 flex flex-col justify-between items-center">
+        <div className="flex-1 flex flex-col justify-center items-center text-center max-w-md">
+          <h1 className="text-3xl sm:text-4xl font-bold text-impostor-red mb-4">¡En Debate!</h1>
+          <p className="text-impostor-text text-sm sm:text-base mb-6">
+            Identificad al Impostor
           </p>
-
-          <button
-            onClick={handleRevealImpostor}
-            className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
-          >
-            Desvelar Impostor
-          </button>
         </div>
+
+        <button
+          onClick={handleRevealImpostor}
+          className="w-full max-w-md bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-3 rounded-xl text-base transition mb-3"
+        >
+          Desvelar Impostor
+        </button>
       </div>
     )
   }
 
   // Results screen
   return (
-    <div className="min-h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
-      <div className="max-w-md w-full text-center">
-        <h1 className="text-4xl font-bold text-impostor-red mb-12">¡Fin de la Ronda!</h1>
+    <div className="h-screen bg-impostor-cream p-3 flex flex-col justify-between items-center overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center items-center text-center max-w-md w-full">
+        <h1 className="text-3xl sm:text-4xl font-bold text-impostor-red mb-4">¡Fin de Ronda!</h1>
         
-        <div className="mb-12">
-          <p className="text-impostor-text-secondary text-sm font-semibold mb-4">El/La Impostor era:</p>
-          <div className="bg-impostor-red text-white rounded-2xl p-8 mb-6">
-            <p className="text-4xl font-black">{impostorIndices.map(idx => players[idx]).join(', ')}</p>
+        <div className="mb-6 w-full">
+          <p className="text-impostor-text-secondary text-xs font-semibold mb-2">El Impostor:</p>
+          <div className="bg-impostor-red text-white rounded-xl p-4 mb-4">
+            <p className="text-2xl sm:text-3xl font-black">{impostorIndices.map(idx => players[idx]).join(', ')}</p>
           </div>
-          <p className="text-impostor-text text-lg">
+          <p className="text-impostor-text text-sm">
             Palabra: <span className="font-bold text-impostor-red">{currentWord}</span>
           </p>
         </div>
+      </div>
 
-        <div className="space-y-3">
-          <button
-            onClick={handlePlayAgain}
-            className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition flex items-center justify-center gap-2"
-          >
-            <RotateCcw size={20} />
-            Jugar de Nuevo
-          </button>
-          <button
-            onClick={onBack}
-            className="w-full bg-white hover:bg-impostor-cream-dark border border-impostor-red text-impostor-red font-bold py-3 rounded-xl text-lg transition"
-          >
-            Volver al Menú
-          </button>
-        </div>
+      <div className="space-y-2 w-full max-w-md">
+        <button
+          onClick={handlePlayAgain}
+          className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-3 rounded-xl text-base transition flex items-center justify-center gap-2"
+        >
+          <RotateCcw size={18} />
+          Jugar de Nuevo
+        </button>
+        <button
+          onClick={onBack}
+          className="w-full bg-white hover:bg-impostor-cream-dark border border-impostor-red text-impostor-red font-bold py-2 rounded-xl text-sm transition"
+        >
+          Volver al Menú
+        </button>
       </div>
     </div>
   )
