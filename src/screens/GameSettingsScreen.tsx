@@ -17,16 +17,24 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   // Create namespaced key for this session
   const getStorageKey = (key: string) => `${sessionId}_${key}`
 
+  // Load player names from initialSettings when component mounts or initialSettings changes
   useEffect(() => {
-    const saved = localStorage.getItem(getStorageKey('impostor_players'))
-    if (saved) {
-      try {
-        setPlayerNames(JSON.parse(saved))
-      } catch (e) {
-        console.error('Error loading players:', e)
+    if (initialSettings.players && initialSettings.players.length > 0) {
+      setPlayerNames(initialSettings.players)
+      // Update localStorage to match
+      localStorage.setItem(getStorageKey('impostor_players'), JSON.stringify(initialSettings.players))
+    } else {
+      // Only load from localStorage if initialSettings is empty
+      const saved = localStorage.getItem(getStorageKey('impostor_players'))
+      if (saved) {
+        try {
+          setPlayerNames(JSON.parse(saved))
+        } catch (e) {
+          console.error('Error loading players:', e)
+        }
       }
     }
-  }, [sessionId])
+  }, [sessionId, initialSettings.players])
 
   const handleAddPlayer = () => {
     if (currentPlayerName.trim()) {
@@ -50,13 +58,18 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         players: playerNames,
         numPlayers: playerNames.length,
       }))
+      setCurrentPlayerName('')
       setShowPlayerNameInput(false)
     }
   }
 
   const handleStartGame = () => {
-    if (settings.numImpostors >= settings.numPlayers) {
-      alert('El número de impostores debe ser menor que el número de jugadores')
+    if (settings.numPlayers === 0) {
+      alert('Debes tener al menos 1 jugador')
+      return
+    }
+    if (settings.numImpostors > settings.numPlayers) {
+      alert('El número de impostores no puede ser mayor que el número de jugadores')
       return
     }
     const finalSettings: GameSettings = {
@@ -74,11 +87,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
     return (
       <div className="min-h-screen bg-impostor-cream p-4 flex flex-col">
         <button
-          onClick={() => {
-            setShowPlayerNameInput(false)
-            setPlayerNames([])
-            setCurrentPlayerName('')
-          }}
+          onClick={() => setShowPlayerNameInput(false)}
           className="self-start text-impostor-red hover:text-impostor-red-light mb-6"
         >
           <X size={24} />
@@ -129,11 +138,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
 
           <div className="flex gap-2 mt-auto">
             <button
-              onClick={() => {
-                setShowPlayerNameInput(false)
-                setPlayerNames([])
-                setCurrentPlayerName('')
-              }}
+              onClick={() => setShowPlayerNameInput(false)}
               className="flex-1 bg-white hover:bg-impostor-cream-dark text-impostor-red border border-impostor-red rounded-lg py-3 font-bold"
             >
               Cancelar
@@ -197,7 +202,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                 onClick={() =>
                   setSettings(prev => ({
                     ...prev,
-                    numImpostors: Math.min(settings.numPlayers - 1, prev.numImpostors + 1),
+                    numImpostors: Math.min(settings.numPlayers, prev.numImpostors + 1),
                   }))
                 }
                 className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
@@ -211,7 +216,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         {/* Submit Button */}
         <button
           onClick={handleStartGame}
-          disabled={settings.numImpostors >= settings.numPlayers}
+          disabled={settings.numPlayers === 0 || settings.numImpostors > settings.numPlayers}
           className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
         >
           Seleccionar Palabras

@@ -40,9 +40,9 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('settings')
   const [sessionId] = useState(generateSessionId())
   const [gameSettings, setGameSettings] = useState<GameSettings>({
-    numPlayers: 5,
+    numPlayers: 0,
     players: [],
-    numImpostors: 1,
+    numImpostors: 0,
     hasClue: true,
     rounds: 1,
     duration: 3,
