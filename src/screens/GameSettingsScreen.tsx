@@ -23,12 +23,29 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
       setPlayerNames(initialSettings.players)
       // Update localStorage to match
       localStorage.setItem(getStorageKey('impostor_players'), JSON.stringify(initialSettings.players))
+      // Sync numPlayers with loaded players
+      setSettings(prev => ({
+        ...prev,
+        players: initialSettings.players,
+        numPlayers: initialSettings.players.length,
+        // Ensure numImpostors is valid (min 1, max numPlayers)
+        numImpostors: Math.max(1, Math.min(prev.numImpostors || 1, initialSettings.players.length)),
+      }))
     } else {
       // Only load from localStorage if initialSettings is empty
       const saved = localStorage.getItem(getStorageKey('impostor_players'))
       if (saved) {
         try {
-          setPlayerNames(JSON.parse(saved))
+          const parsed = JSON.parse(saved)
+          setPlayerNames(parsed)
+          // Sync numPlayers with loaded players from localStorage
+          setSettings(prev => ({
+            ...prev,
+            players: parsed,
+            numPlayers: parsed.length,
+            // Ensure numImpostors is valid (min 1, max numPlayers)
+            numImpostors: Math.max(1, Math.min(prev.numImpostors || 1, parsed.length)),
+          }))
         } catch (e) {
           console.error('Error loading players:', e)
         }
@@ -57,6 +74,8 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         ...prev,
         players: playerNames,
         numPlayers: playerNames.length,
+        // Ensure numImpostors doesn't exceed numPlayers
+        numImpostors: Math.min(prev.numImpostors, playerNames.length),
       }))
       setCurrentPlayerName('')
       setShowPlayerNameInput(false)
@@ -66,6 +85,10 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   const handleStartGame = () => {
     if (settings.numPlayers === 0) {
       alert('Debes tener al menos 1 jugador')
+      return
+    }
+    if (settings.numImpostors === 0) {
+      alert('Debes tener al menos 1 impostor')
       return
     }
     if (settings.numImpostors > settings.numPlayers) {
@@ -191,7 +214,8 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                     numImpostors: Math.max(1, prev.numImpostors - 1),
                   }))
                 }
-                className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
+                disabled={settings.numImpostors <= 1 || settings.numPlayers === 0}
+                className="bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed text-white p-3 rounded-lg transition"
               >
                 <Minus size={24} />
               </button>
@@ -202,10 +226,11 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                 onClick={() =>
                   setSettings(prev => ({
                     ...prev,
-                    numImpostors: Math.min(settings.numPlayers, prev.numImpostors + 1),
+                    numImpostors: Math.min(prev.numPlayers, prev.numImpostors + 1),
                   }))
                 }
-                className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
+                disabled={settings.numImpostors >= settings.numPlayers || settings.numPlayers === 0}
+                className="bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed text-white p-3 rounded-lg transition"
               >
                 <Plus size={24} />
               </button>
@@ -216,7 +241,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         {/* Submit Button */}
         <button
           onClick={handleStartGame}
-          disabled={settings.numPlayers === 0 || settings.numImpostors > settings.numPlayers}
+          disabled={settings.numPlayers === 0 || settings.numImpostors === 0 || settings.numImpostors > settings.numPlayers}
           className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
         >
           Seleccionar Palabras
