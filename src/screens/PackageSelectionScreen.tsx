@@ -107,20 +107,20 @@ function PackageSelectionScreen({
   const selectedCount = allPackages.filter(p => p.selected).length
 
   return (
-    <div className="h-screen bg-impostor-cream p-3 flex flex-col overflow-hidden">
+    <div className="h-screen bg-impostor-cream p-4 flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-impostor-red">Paquetes</h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-3xl font-bold text-impostor-red">Paquetes</h1>
         <button
           onClick={onBack}
           className="text-impostor-red hover:text-impostor-red-light"
         >
-          <X size={24} />
+          <X size={28} />
         </button>
       </div>
 
       {/* Packages Grid */}
-      <div className="flex-1 overflow-y-auto pb-2 pr-2">
+      <div className="flex-1 overflow-y-auto pb-2">
         <div className="grid grid-cols-2 gap-2">
           {allPackages.map(pkg => (
             <PackageCard
@@ -134,9 +134,9 @@ function PackageSelectionScreen({
           {/* Add Custom Package Button */}
           <button
             onClick={() => setShowCustomModal(true)}
-            className="bg-white hover:bg-impostor-cream-dark border-2 border-dashed border-impostor-red rounded-xl p-4 flex flex-col items-center justify-center min-h-28 transition"
+            className="bg-white hover:bg-impostor-cream-dark border-2 border-dashed border-impostor-red rounded-xl p-4 flex flex-col items-center justify-center min-h-32 transition"
           >
-            <Plus size={24} className="text-impostor-red mb-1" />
+            <Plus size={28} className="text-impostor-red mb-1" />
             <span className="text-impostor-red font-bold text-center text-xs">
               Crear paquete
             </span>
@@ -156,9 +156,9 @@ function PackageSelectionScreen({
       <button
         onClick={handleSubmit}
         disabled={selectedCount === 0}
-        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-3 rounded-xl text-base transition flex items-center justify-center gap-2 mt-2"
+        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition flex items-center justify-center gap-2 mt-2"
       >
-        <Check size={18} />
+        <Check size={20} />
         Iniciar ({selectedCount})
       </button>
     </div>

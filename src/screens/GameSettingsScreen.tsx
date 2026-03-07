@@ -152,33 +152,33 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   }
 
   return (
-    <div className="h-screen bg-impostor-cream p-3 flex flex-col overflow-hidden">
-      <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full">
-        <h1 className="text-4xl sm:text-5xl font-bold text-impostor-red text-center drop-shadow-sm">
-          El Impostor
-        </h1>
+    <div className="h-screen bg-impostor-cream p-4 flex flex-col">
+      <h1 className="text-4xl font-bold text-impostor-red text-center mb-3">
+        El Impostor
+      </h1>
 
-        <div className="space-y-3 w-full">
+      <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full">
+        <div className="space-y-4">
           {/* Players */}
-          <div className="bg-impostor-cream-dark rounded-xl p-4 border border-impostor-red/10">
-            <div className="text-center mb-3">
-              <p className="text-impostor-text-secondary text-xs font-semibold mb-1">Total de Jugadores</p>
-              <p className="text-4xl sm:text-5xl font-black text-impostor-red">{settings.numPlayers}</p>
+          <div className="bg-impostor-cream-dark rounded-xl p-6 border border-impostor-red/10">
+            <div className="text-center mb-4">
+              <p className="text-impostor-text-secondary text-sm font-semibold mb-2">Jugadores</p>
+              <p className="text-6xl font-black text-impostor-red">{settings.numPlayers}</p>
             </div>
             <button
               onClick={() => setShowPlayerNameInput(true)}
-              className="w-full bg-impostor-red hover:bg-impostor-red-light text-white py-3 rounded-lg font-bold text-sm sm:text-base transition"
+              className="w-full bg-impostor-red hover:bg-impostor-red-light text-white py-3 rounded-lg font-bold text-base transition"
             >
-              {playerNames.length > 0 ? `✓ Editar (${playerNames.length})` : 'Nombres'}
+              {playerNames.length > 0 ? `✓ Editar (${playerNames.length})` : 'Añadir Nombres'}
             </button>
           </div>
 
           {/* Impostors */}
-          <div className="bg-impostor-cream-dark rounded-xl p-4 border border-impostor-red/10">
-            <label className="block text-impostor-text text-xs font-semibold mb-3 text-center">
+          <div className="bg-impostor-cream-dark rounded-xl p-6 border border-impostor-red/10">
+            <label className="block text-impostor-text text-sm font-semibold mb-4 text-center">
               Impostores
             </label>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-6">
               <button
                 onClick={() =>
                   setSettings(prev => ({
@@ -186,11 +186,11 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                     numImpostors: Math.max(1, prev.numImpostors - 1),
                   }))
                 }
-                className="bg-impostor-red hover:bg-impostor-red-light text-white p-2 rounded-lg transition"
+                className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
               >
-                <Minus size={20} />
+                <Minus size={24} />
               </button>
-              <span className="text-4xl sm:text-5xl font-black text-impostor-red w-16 text-center">
+              <span className="text-6xl font-black text-impostor-red w-20 text-center">
                 {settings.numImpostors}
               </span>
               <button
@@ -200,23 +200,23 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                     numImpostors: Math.min(settings.numPlayers - 1, prev.numImpostors + 1),
                   }))
                 }
-                className="bg-impostor-red hover:bg-impostor-red-light text-white p-2 rounded-lg transition"
+                className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
               >
-                <Plus size={20} />
+                <Plus size={24} />
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Submit Button */}
-      <button
-        onClick={handleStartGame}
-        disabled={settings.numImpostors >= settings.numPlayers}
-        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-3 rounded-xl text-base transition mt-2"
-      >
-        Seleccionar Palabras
-      </button>
+        {/* Submit Button */}
+        <button
+          onClick={handleStartGame}
+          disabled={settings.numImpostors >= settings.numPlayers}
+          className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+        >
+          Seleccionar Palabras
+        </button>
+      </div>
     </div>
   )
 }
