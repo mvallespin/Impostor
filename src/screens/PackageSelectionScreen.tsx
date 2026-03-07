@@ -120,7 +120,7 @@ function PackageSelectionScreen({
       </div>
 
       {/* Packages Grid */}
-      <div className="flex-1 overflow-y-auto pb-2 min-h-0">
+      <div className="flex-1 overflow-y-auto min-h-0 mb-3">
         <div className="grid grid-cols-2 gap-2">
           {allPackages.map(pkg => (
             <PackageCard
@@ -152,11 +152,11 @@ function PackageSelectionScreen({
         />
       )}
 
-      {/* Submit Button */}
+      {/* Submit Button - Always visible at bottom */}
       <button
         onClick={handleSubmit}
         disabled={selectedCount === 0}
-        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition flex items-center justify-center gap-2 mt-3"
+        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition flex items-center justify-center gap-2"
       >
         <Check size={20} />
         Iniciar ({selectedCount})
