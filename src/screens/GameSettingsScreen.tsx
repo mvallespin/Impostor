@@ -1,0 +1,224 @@
+import { useState, useEffect } from 'react'
+import { Plus, Minus, X } from 'lucide-react'
+import { GameSettings } from '../App'
+
+interface GameSettingsScreenProps {
+  sessionId: string
+  initialSettings: GameSettings
+  onSubmit: (settings: GameSettings) => void
+}
+
+function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettingsScreenProps) {
+  const [settings, setSettings] = useState<GameSettings>(initialSettings)
+  const [showPlayerNameInput, setShowPlayerNameInput] = useState(false)
+  const [playerNames, setPlayerNames] = useState<string[]>(initialSettings.players || [])
+  const [currentPlayerName, setCurrentPlayerName] = useState('')
+
+  // Create namespaced key for this session
+  const getStorageKey = (key: string) => `${sessionId}_${key}`
+
+  useEffect(() => {
+    const saved = localStorage.getItem(getStorageKey('impostor_players'))
+    if (saved) {
+      try {
+        setPlayerNames(JSON.parse(saved))
+      } catch (e) {
+        console.error('Error loading players:', e)
+      }
+    }
+  }, [sessionId])
+
+  const handleAddPlayer = () => {
+    if (currentPlayerName.trim()) {
+      const updated = [...playerNames, currentPlayerName.trim()]
+      setPlayerNames(updated)
+      setCurrentPlayerName('')
+      localStorage.setItem(getStorageKey('impostor_players'), JSON.stringify(updated))
+    }
+  }
+
+  const handleRemovePlayer = (index: number) => {
+    const updated = playerNames.filter((_, i) => i !== index)
+    setPlayerNames(updated)
+    localStorage.setItem(getStorageKey('impostor_players'), JSON.stringify(updated))
+  }
+
+  const handleFinishPlayers = () => {
+    if (playerNames.length > 0) {
+      setSettings(prev => ({
+        ...prev,
+        players: playerNames,
+        numPlayers: playerNames.length,
+      }))
+      setShowPlayerNameInput(false)
+    }
+  }
+
+  const handleStartGame = () => {
+    if (settings.numImpostors >= settings.numPlayers) {
+      alert('El número de impostores debe ser menor que el número de jugadores')
+      return
+    }
+    const finalSettings: GameSettings = {
+      ...settings,
+      players: playerNames.length > 0 ? playerNames : Array.from({ length: settings.numPlayers }, (_, i) => `Jugador ${i + 1}`),
+      numImpostors: settings.numImpostors,
+      hasClue: true,
+      rounds: 1,
+      duration: 'unlimited',
+    }
+    onSubmit(finalSettings)
+  }
+
+  if (showPlayerNameInput) {
+    return (
+      <div className="min-h-screen bg-impostor-cream p-4 flex flex-col">
+        <button
+          onClick={() => {
+            setShowPlayerNameInput(false)
+            setPlayerNames([])
+            setCurrentPlayerName('')
+          }}
+          className="self-start text-impostor-red hover:text-impostor-red-light mb-6"
+        >
+          <X size={24} />
+        </button>
+
+        <div className="flex-1 flex flex-col">
+          <h1 className="text-3xl font-bold text-impostor-red mb-8">
+            Nombres de Jugadores
+          </h1>
+
+          <div className="space-y-3 mb-8 max-h-60 overflow-y-auto">
+            {playerNames.map((name, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between bg-white rounded-lg p-3 border border-impostor-cream-dark"
+              >
+                <span className="text-impostor-text">{name}</span>
+                <button
+                  onClick={() => handleRemovePlayer(index)}
+                  className="text-impostor-red hover:text-impostor-red-light"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={currentPlayerName}
+              onChange={(e) => setCurrentPlayerName(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleAddPlayer()
+                }
+              }}
+              placeholder="Nombre del jugador"
+              className="flex-1 bg-white text-impostor-text rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-impostor-red border border-impostor-cream-dark"
+            />
+            <button
+              onClick={handleAddPlayer}
+              className="bg-impostor-red hover:bg-impostor-red-light text-white px-6 py-2 rounded-lg font-bold transition"
+            >
+              <Plus size={20} />
+            </button>
+          </div>
+
+          <div className="flex gap-2 mt-auto">
+            <button
+              onClick={() => {
+                setShowPlayerNameInput(false)
+                setPlayerNames([])
+                setCurrentPlayerName('')
+              }}
+              className="flex-1 bg-white hover:bg-impostor-cream-dark text-impostor-red border border-impostor-red rounded-lg py-3 font-bold"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleFinishPlayers}
+              disabled={playerNames.length === 0}
+              className="flex-1 bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-lg font-bold"
+            >
+              Confirmar ({playerNames.length})
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-impostor-cream p-4 flex flex-col">
+      <div className="flex-1 flex flex-col justify-center max-w-md mx-auto w-full">
+        <h1 className="text-5xl font-bold text-impostor-red mb-12 text-center drop-shadow-sm">
+          El Impostor
+        </h1>
+
+        <div className="space-y-6 w-full">
+          {/* Players */}
+          <div className="bg-impostor-cream-dark rounded-2xl p-8 border border-impostor-red/10">
+            <div className="text-center mb-6">
+              <p className="text-impostor-text-secondary text-sm font-semibold mb-2">Total de Jugadores</p>
+              <p className="text-5xl font-black text-impostor-red">{settings.numPlayers}</p>
+            </div>
+            <button
+              onClick={() => setShowPlayerNameInput(true)}
+              className="w-full bg-impostor-red hover:bg-impostor-red-light text-white py-4 rounded-lg font-bold text-lg transition"
+            >
+              {playerNames.length > 0 ? `✓ Añadir/Editar Nombres (${playerNames.length})` : 'Añadir Nombres de Jugadores'}
+            </button>
+          </div>
+
+          {/* Impostors */}
+          <div className="bg-impostor-cream-dark rounded-2xl p-8 border border-impostor-red/10">
+            <label className="block text-impostor-text text-sm font-semibold mb-6 text-center">
+              Número de Impostores
+            </label>
+            <div className="flex items-center justify-center gap-4">
+              <button
+                onClick={() =>
+                  setSettings(prev => ({
+                    ...prev,
+                    numImpostors: Math.max(1, prev.numImpostors - 1),
+                  }))
+                }
+                className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
+              >
+                <Minus size={24} />
+              </button>
+              <span className="text-5xl font-black text-impostor-red w-20 text-center">
+                {settings.numImpostors}
+              </span>
+              <button
+                onClick={() =>
+                  setSettings(prev => ({
+                    ...prev,
+                    numImpostors: Math.min(settings.numPlayers - 1, prev.numImpostors + 1),
+                  }))
+                }
+                className="bg-impostor-red hover:bg-impostor-red-light text-white p-3 rounded-lg transition"
+              >
+                <Plus size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        onClick={handleStartGame}
+        disabled={settings.numImpostors >= settings.numPlayers}
+        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+      >
+        Seleccionar Palabras
+      </button>
+    </div>
+  )
+}
+
+export default GameSettingsScreen
