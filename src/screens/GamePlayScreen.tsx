@@ -178,7 +178,7 @@ function GamePlayScreen({
   // Reveal screen - each player sees their word
   if (gameState === 'reveal') {
     return (
-      <div className="h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
+      <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
         <div className="w-full max-w-sm">
           {showWord ? (
             <>
@@ -231,7 +231,7 @@ function GamePlayScreen({
   // Debate screen
   if (gameState === 'debate') {
     return (
-      <div className="h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
+      <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
         <div className="w-full max-w-sm text-center mb-6">
           <h1 className="text-4xl font-bold text-impostor-red mb-4">¡En Debate!</h1>
           <p className="text-impostor-text text-lg">
@@ -251,7 +251,7 @@ function GamePlayScreen({
 
   // Results screen
   return (
-    <div className="h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
+    <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
       <div className="w-full max-w-sm text-center mb-6">
         <h1 className="text-4xl font-bold text-impostor-red mb-4">¡Fin de Ronda!</h1>
         

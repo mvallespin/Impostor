@@ -108,7 +108,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
 
   if (showPlayerNameInput) {
     return (
-      <div className="min-h-screen bg-impostor-cream p-4 flex flex-col">
+      <div className="h-[100dvh] bg-impostor-cream px-4 pt-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col overflow-hidden">
         <button
           onClick={() => {
             // Restore playerNames to last saved state
@@ -116,17 +116,17 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
             setCurrentPlayerName('')
             setShowPlayerNameInput(false)
           }}
-          className="self-start text-impostor-red hover:text-impostor-red-light mb-6"
+          className="self-start text-impostor-red hover:text-impostor-red-light mb-4"
         >
           <X size={24} />
         </button>
 
-        <div className="flex-1 flex flex-col">
-          <h1 className="text-3xl font-bold text-impostor-red mb-8">
+        <div className="flex-1 min-h-0 flex flex-col">
+          <h1 className="text-2xl sm:text-3xl font-bold text-impostor-red mb-5">
             Nombres de Jugadores
           </h1>
 
-          <div className="space-y-3 mb-8 max-h-60 overflow-y-auto">
+          <div className="space-y-3 flex-1 min-h-0 overflow-y-auto pr-1">
             {playerNames.map((name, index) => (
               <div
                 key={index}
@@ -143,7 +143,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
             ))}
           </div>
 
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mt-4">
             <input
               type="text"
               value={currentPlayerName}
@@ -164,7 +164,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
             </button>
           </div>
 
-          <div className="flex gap-2 mt-auto">
+          <div className="flex gap-2 mt-3">
             <button
               onClick={() => {
                 // Restore playerNames to last saved state
@@ -190,7 +190,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   }
 
   return (
-    <div className="h-screen bg-impostor-cream p-4 flex flex-col justify-center items-center">
+    <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+16px)] flex flex-col justify-center items-center overflow-hidden">
       <div className="w-full max-w-sm">
         <h1 className="text-4xl font-bold text-impostor-red text-center mb-6">
           El Impostor

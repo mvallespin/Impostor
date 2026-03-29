@@ -107,7 +107,7 @@ function PackageSelectionScreen({
   const selectedCount = allPackages.filter(p => p.selected).length
 
   return (
-    <div className="h-screen bg-impostor-cream p-4 flex flex-col">
+    <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h1 className="text-3xl font-bold text-impostor-red">Paquetes</h1>
