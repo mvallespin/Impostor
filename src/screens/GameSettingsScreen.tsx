@@ -14,6 +14,14 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   const [playerNames, setPlayerNames] = useState<string[]>(initialSettings.players || [])
   const [currentPlayerName, setCurrentPlayerName] = useState('')
 
+  const clampImpostors = (numImpostors: number, numPlayers: number): number => {
+    const maxImpostors = Math.max(0, numPlayers - 1)
+    if (maxImpostors === 0) {
+      return 0
+    }
+    return Math.min(Math.max(1, numImpostors), maxImpostors)
+  }
+
   // Create namespaced key for this session
   const getStorageKey = (key: string) => `${sessionId}_${key}`
 
@@ -28,8 +36,8 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         ...prev,
         players: initialSettings.players,
         numPlayers: initialSettings.players.length,
-        // Ensure numImpostors is valid (min 1, max numPlayers)
-        numImpostors: Math.max(1, Math.min(prev.numImpostors || 1, initialSettings.players.length)),
+        // Ensure numImpostors is valid (min 1 when possible, and always < numPlayers)
+        numImpostors: clampImpostors(prev.numImpostors || 1, initialSettings.players.length),
       }))
     } else {
       // Only load from localStorage if initialSettings is empty
@@ -43,8 +51,8 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
             ...prev,
             players: parsed,
             numPlayers: parsed.length,
-            // Ensure numImpostors is valid (min 1, max numPlayers)
-            numImpostors: Math.max(1, Math.min(prev.numImpostors || 1, parsed.length)),
+            // Ensure numImpostors is valid (min 1 when possible, and always < numPlayers)
+            numImpostors: clampImpostors(prev.numImpostors || 1, parsed.length),
           }))
         } catch (e) {
           console.error('Error loading players:', e)
@@ -74,8 +82,8 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         ...prev,
         players: playerNames,
         numPlayers: playerNames.length,
-        // Ensure numImpostors doesn't exceed numPlayers
-        numImpostors: Math.min(prev.numImpostors, playerNames.length),
+        // Keep impostors valid after editing names
+        numImpostors: clampImpostors(prev.numImpostors, playerNames.length),
       }))
       setCurrentPlayerName('')
       setShowPlayerNameInput(false)
@@ -83,16 +91,16 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
   }
 
   const handleStartGame = () => {
-    if (settings.numPlayers === 0) {
-      alert('Debes tener al menos 1 jugador')
+    if (settings.numPlayers < 2) {
+      alert('Debes tener al menos 2 jugadores')
       return
     }
     if (settings.numImpostors === 0) {
       alert('Debes tener al menos 1 impostor')
       return
     }
-    if (settings.numImpostors > settings.numPlayers) {
-      alert('El número de impostores no puede ser mayor que el número de jugadores')
+    if (settings.numImpostors >= settings.numPlayers) {
+      alert('El número de impostores debe ser menor que el número de jugadores')
       return
     }
     const finalSettings: GameSettings = {
@@ -126,6 +134,32 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
             Nombres de Jugadores
           </h1>
 
+          <div className="bg-white/70 border border-impostor-red/20 rounded-xl p-3 mb-4">
+            <p className="text-impostor-text-secondary text-xs font-semibold mb-2">
+              Añade jugadores
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={currentPlayerName}
+                onChange={(e) => setCurrentPlayerName(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleAddPlayer()
+                  }
+                }}
+                placeholder="Escribe un nombre"
+                className="flex-1 bg-white text-impostor-text rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-impostor-red border-2 border-impostor-red/20"
+              />
+              <button
+                onClick={handleAddPlayer}
+                className="bg-impostor-red hover:bg-impostor-red-light text-white px-6 py-3 rounded-lg font-bold transition shadow-sm"
+              >
+                <Plus size={20} />
+              </button>
+            </div>
+          </div>
+
           <div className="space-y-3 flex-1 min-h-0 overflow-y-auto pr-1">
             {playerNames.map((name, index) => (
               <div
@@ -141,27 +175,6 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                 </button>
               </div>
             ))}
-          </div>
-
-          <div className="flex gap-2 mt-4">
-            <input
-              type="text"
-              value={currentPlayerName}
-              onChange={(e) => setCurrentPlayerName(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleAddPlayer()
-                }
-              }}
-              placeholder="Nombre del jugador"
-              className="flex-1 bg-white text-impostor-text rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-impostor-red border border-impostor-cream-dark"
-            />
-            <button
-              onClick={handleAddPlayer}
-              className="bg-impostor-red hover:bg-impostor-red-light text-white px-6 py-2 rounded-lg font-bold transition"
-            >
-              <Plus size={20} />
-            </button>
           </div>
 
           <div className="flex gap-2 mt-3">
@@ -221,10 +234,10 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                 onClick={() =>
                   setSettings(prev => ({
                     ...prev,
-                    numImpostors: Math.max(1, prev.numImpostors - 1),
+                    numImpostors: clampImpostors(prev.numImpostors - 1, prev.numPlayers),
                   }))
                 }
-                disabled={settings.numImpostors <= 1 || settings.numPlayers === 0}
+                disabled={settings.numPlayers <= 1 || settings.numImpostors <= 1}
                 className="bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed text-white p-3 rounded-lg transition"
               >
                 <Minus size={24} />
@@ -236,10 +249,10 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
                 onClick={() =>
                   setSettings(prev => ({
                     ...prev,
-                    numImpostors: Math.min(prev.numPlayers, prev.numImpostors + 1),
+                    numImpostors: clampImpostors(prev.numImpostors + 1, prev.numPlayers),
                   }))
                 }
-                disabled={settings.numImpostors >= settings.numPlayers || settings.numPlayers === 0}
+                disabled={settings.numPlayers <= 1 || settings.numImpostors >= settings.numPlayers - 1}
                 className="bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed text-white p-3 rounded-lg transition"
               >
                 <Plus size={24} />
@@ -251,7 +264,7 @@ function GameSettingsScreen({ sessionId, initialSettings, onSubmit }: GameSettin
         {/* Submit Button */}
         <button
           onClick={handleStartGame}
-          disabled={settings.numPlayers === 0 || settings.numImpostors === 0 || settings.numImpostors > settings.numPlayers}
+          disabled={settings.numPlayers < 2 || settings.numImpostors === 0 || settings.numImpostors >= settings.numPlayers}
           className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
         >
           Seleccionar Palabras
