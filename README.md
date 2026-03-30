@@ -1,129 +1,105 @@
 # El Impostor - Progressive Web App
 
-Una aplicación web progresiva (PWA) multiplayer "Pass & Play" para el juego del Impostor.
+PWA "Pass & Play" para jugar al Impostor en el mismo dispositivo.
 
-## Características
+## Estado actual (Marzo 2026)
 
-✨ **Gameplay Completo**
-- Selección de palabras de múltiples categorías (Animales, Películas, Comida, Lugares, Trabajos, Deportes)
-- Crear paquetes de palabras personalizados
-- Sistema aleatorio de asignación de roles (Tripulante/Impostor)
-- Mecanismo de "tapa" con deslizamiento para revelar roles
-- Sistema de rondas y temporizador de debate
-- Detección del Impostor mediante pistas opcionales
+### Flujo de juego implementado
+- Configuracion de jugadores con nombres personalizados.
+- Ajuste de numero de impostores (siempre menor que jugadores).
+- Seleccion de paquetes de palabras (incluye paquetes por defecto + paquetes personalizados en sesion).
+- Fase de revelado por turnos: cada jugador ve su rol/palabra en privado.
+- Fase de debate manual.
+- Pantalla final para desvelar al impostor y jugar otra ronda.
 
-🎨 **Diseño**
-- Paleta de colores roja y negra agresiva y moderna
-- Interfaz completamente limpia sin anuncios o pagos
-- Diseño móvil-first responsive
-- Animaciones suaves con Framer Motion
-- Tema oscuro por defecto
+### Paquetes por defecto actuales
+- General
+- Comida
+- Peliculas
+- Series
+- Famosos
+- Animales
 
-📱 **Progressive Web App**
-- Funciona offline después de la primera carga
-- Installable en dispositivos móviles (iOS y Android)
-- Service Worker para almacenamiento en caché
-- Manifest.json para instalación nativa
-- Almacenamiento persistente con LocalStorage
+Orden de visualizacion en la pantalla de paquetes:
+1. General
+2. Comida
+3. Peliculas
+4. Series
+5. Famosos
+6. Animales
 
-💾 **Persistencia**
-- Guarda automáticamente los nombres de jugadores
-- Almacena paquetes de palabras personalizados
-- LocalStorage para configuraciones
+### PWA
+- Registro de Service Worker en `src/main.tsx`.
+- Cache de shell basico y runtime en `public/service-worker.js`.
+- Manifest configurado en `public/manifest.json`.
 
-## Tecnología
+## Tecnologias
 
-- **React 18** - Framework UI
-- **TypeScript** - Type safety
-- **Vite** - Build tool rápido
-- **Tailwind CSS** - Utilidad CSS
-- **Framer Motion** - Animaciones
-- **Lucide React** - Iconos SVG
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Framer Motion
+- Lucide React
 
-## Instalación
+## Scripts
 
 ```bash
 npm install
-```
-
-## Desarrollo
-
-```bash
 npm run dev
-```
-
-Abre [http://localhost:5173](http://localhost:5173) en tu navegador.
-
-## Build para Producción
-
-```bash
 npm run build
+npm run preview
 ```
 
-El resultado estará en la carpeta `dist/`.
+## Como jugar
 
-## Estructura del Proyecto
+1. Entra en la pantalla inicial y anade nombres de jugadores.
+2. Ajusta el numero de impostores.
+3. Pulsa "Seleccionar Palabras".
+4. Elige uno o varios paquetes y pulsa "Iniciar".
+5. Pasad el movil por turnos para revelar rol/palabra.
+6. Debatid y pulsad "Desvelar Impostor".
+7. Iniciad otra ronda si quereis.
 
-```
+## Persistencia actual
+
+- Se genera un id de sesion por pestaña/navegador (`sessionStorage`: `impostor_session_id`).
+- Los nombres de jugadores se guardan por sesion en `localStorage` con clave namespaced: `${sessionId}_impostor_players`.
+- Los paquetes personalizados se mantienen en memoria durante la sesion de la app (no se guardan en localStorage actualmente).
+
+## Estructura principal
+
+```text
 src/
-├── App.tsx                 # Componente raíz y enrutamiento
-├── main.tsx               # Entry point
-├── index.css              # Estilos globales con Tailwind
-├── screens/
-│   ├── GameSettingsScreen.tsx      # Pantalla de configuración
-│   ├── PackageSelectionScreen.tsx  # Selección de paquetes
-│   └── GamePlayScreen.tsx          # Gameplay principal
-├── components/
-│   ├── RevealCard.tsx              # Card deslizable para revelar
-│   ├── PackageCard.tsx             # Tarjeta de paquete
-│   ├── CreateCustomPackageModal.tsx # Modal para crear paquete
-│   └── Timer.tsx                   # Temporizador del debate
-└── App.tsx
+   App.tsx
+   main.tsx
+   index.css
+   screens/
+      GameSettingsScreen.tsx
+      PackageSelectionScreen.tsx
+      GamePlayScreen.tsx
+   components/
+      PackageCard.tsx
+      CreateCustomPackageModal.tsx
+      RevealCard.tsx
+      Timer.tsx
 public/
-├── manifest.json           # PWA manifest
-└── service-worker.js       # Service worker
+   manifest.json
+   service-worker.js
 ```
 
-## PWA Installation
+## Notas
 
-### En Android/Chrome
-1. Abre la aplicación en Chrome
-2. Click en el menú (⋮)
-3. "Instalar aplicación"
+- `RevealCard.tsx` y `Timer.tsx` existen en el proyecto, pero no forman parte del flujo activo actual.
+- En el estado actual no hay temporizador configurable de debate ni seleccion de rondas desde UI.
 
-### En iOS/Safari
-1. Abre la aplicación en Safari
-2. Pulsa el botón Compartir
-3. "Añadir a pantalla de inicio"
+## Roadmap
 
-## Cómo Jugar
-
-1. **Configurar Partida**: Selecciona número de jugadores, impostores, rondas y duración
-2. **Seleccionar Palabras**: Elige paquetes de palabras o crea los tuyos propios
-3. **Juego**: 
-   - Cada jugador desliza la tarjeta hacia arriba para revelar su rol
-   - Los Tripulantes ven la palabra secreta
-   - El Impostor ve "ERES EL IMPOSTOR"
-   - Después, todos debaten en el tiempo establecido
-   - Votad quién es el Impostor
-
-## Características Planificadas
-
-- [ ] Soporte para múltiples idiomas
-- [ ] Historial de partidas
-- [ ] Estadísticas de jugador
+- [ ] Soporte multiidioma
+- [ ] Historial y estadisticas de partidas
 - [ ] Sonidos y vibraciones
-- [ ] Temas personalizables
-- [ ] Compartir partidas entre dispositivos
+- [ ] Sincronizacion/compartir entre dispositivos
 
 ## Licencia
 
 MIT
-
-## Contribuciones
-
-Las contribuciones son bienvenidas. Por favor abre un issue o pull request.
-
----
-
-Hecho con ❤️ para las reuniones familiares

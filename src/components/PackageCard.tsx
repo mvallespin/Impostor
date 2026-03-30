@@ -11,10 +11,10 @@ interface PackageCardProps {
 const PACKAGE_ICONS: Record<string, string> = {
   animals: '🦁',
   movies: '🎬',
+  series: '📺',
   food: '🍕',
-  places: '🏖️',
-  jobs: '💼',
-  sports: '⚽',
+  general: '🌍',
+  famous: '⭐',
 }
 
 function PackageCard({ package: pkg, isSelected, onToggle }: PackageCardProps) {
