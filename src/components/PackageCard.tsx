@@ -24,22 +24,22 @@ function PackageCard({ package: pkg, isSelected, onToggle }: PackageCardProps) {
   return (
     <button
       onClick={onToggle}
-      className={`rounded-2xl p-4 text-center transition-all relative ${
+      className={`w-full rounded-2xl p-4 text-center transition-all relative ${
         isSelected
-          ? 'bg-impostor-red border-2 border-impostor-red-dark'
-          : 'bg-white hover:bg-impostor-cream-dark border-2 border-transparent hover:border-impostor-red/50'
+          ? 'bg-impostor-red border-2 border-impostor-red-dark shadow-lg shadow-impostor-red/20'
+          : 'bg-impostor-surface hover:bg-impostor-surface-soft border-2 border-transparent hover:border-impostor-red/45'
       }`}
     >
       <div className="text-4xl mb-3">{icon}</div>
-      <h3 className={`font-bold text-sm mb-2 ${isSelected ? 'text-white' : 'text-impostor-text'}`}>
+      <h3 className={`font-bold text-sm mb-2 ${isSelected ? 'text-impostor-bg' : 'text-impostor-text-on-dark'}`}>
         {pkg.name}
       </h3>
-      <p className={`text-xs ${isSelected ? 'text-white/80' : 'text-impostor-text-secondary'}`}>
+      <p className={`text-xs ${isSelected ? 'text-impostor-bg/80' : 'text-impostor-muted'}`}>
         {pkg.words.length} palabras
       </p>
 
       {isSelected && (
-        <div className="absolute top-2 right-2 bg-white rounded-full p-1">
+        <div className="absolute top-2 right-2 bg-impostor-bg rounded-full p-1">
           <Check size={16} className="text-impostor-red" />
         </div>
       )}

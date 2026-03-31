@@ -35,7 +35,7 @@ function CreateCustomPackageModal({ onSubmit, onCancel }: CreateCustomPackageMod
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       onClick={onCancel}
     >
       <motion.div
@@ -43,7 +43,7 @@ function CreateCustomPackageModal({ onSubmit, onCancel }: CreateCustomPackageMod
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
         onClick={e => e.stopPropagation()}
-        className="bg-white rounded-2xl p-6 w-full max-w-sm border border-impostor-red/20"
+        className="bg-impostor-surface rounded-2xl p-6 w-full max-w-sm border border-impostor-red/35 shadow-2xl"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-impostor-red">Crear Paquete</h2>
@@ -57,7 +57,7 @@ function CreateCustomPackageModal({ onSubmit, onCancel }: CreateCustomPackageMod
 
         <div className="space-y-4">
           <div>
-            <label className="block text-impostor-text text-sm font-semibold mb-2">
+            <label className="block text-impostor-text-on-dark text-sm font-semibold mb-2">
               Nombre del Paquete
             </label>
             <input
@@ -65,12 +65,12 @@ function CreateCustomPackageModal({ onSubmit, onCancel }: CreateCustomPackageMod
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Ej: Superhéroes, Videojuegos"
-              className="w-full bg-impostor-cream text-impostor-text rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-impostor-red border border-impostor-cream-dark"
+              className="w-full bg-impostor-bg/70 text-impostor-text-on-dark rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-impostor-red border border-impostor-red/25"
             />
           </div>
 
           <div>
-            <label className="block text-impostor-text text-sm font-semibold mb-2">
+            <label className="block text-impostor-text-on-dark text-sm font-semibold mb-2">
               Palabras (separadas por comas)
             </label>
             <textarea
@@ -78,9 +78,9 @@ function CreateCustomPackageModal({ onSubmit, onCancel }: CreateCustomPackageMod
               onChange={e => setWordsText(e.target.value)}
               placeholder="Ej: Batman, Superman, Ironman, Spiderman"
               rows={6}
-              className="w-full bg-impostor-cream text-impostor-text rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-impostor-red resize-none border border-impostor-cream-dark"
+              className="w-full bg-impostor-bg/70 text-impostor-text-on-dark rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-impostor-red resize-none border border-impostor-red/25"
             />
-            <p className="text-impostor-text-secondary text-xs mt-2">
+            <p className="text-impostor-muted text-xs mt-2">
               Mínimo 2 palabras recomendadas
             </p>
           </div>
@@ -88,13 +88,13 @@ function CreateCustomPackageModal({ onSubmit, onCancel }: CreateCustomPackageMod
           <div className="flex gap-2 pt-4">
             <button
               onClick={onCancel}
-              className="flex-1 bg-impostor-cream hover:bg-impostor-cream-dark text-impostor-text rounded-lg py-2 font-bold transition border border-impostor-cream-dark"
+              className="flex-1 bg-impostor-surface-soft hover:bg-impostor-surface border border-white/15 text-impostor-text-on-dark rounded-lg py-2 font-bold transition"
             >
               Cancelar
             </button>
             <button
               onClick={handleSubmit}
-              className="flex-1 bg-impostor-red hover:bg-impostor-red-light text-white rounded-lg py-2 font-bold transition"
+              className="flex-1 impostor-primary-btn rounded-lg py-2"
             >
               Crear
             </button>

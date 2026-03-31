@@ -238,10 +238,10 @@ function PackageSelectionScreen({
   })
 
   return (
-    <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col overflow-hidden">
+    <div className="h-[100dvh] bg-impostor-bg text-impostor-text-on-dark p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <h1 className="text-3xl font-bold text-impostor-red">Paquetes</h1>
+        <h1 className="text-3xl font-bold text-impostor-red tracking-tight">Paquetes</h1>
         <button
           onClick={onBack}
           className="text-impostor-red hover:text-impostor-red-light"
@@ -265,7 +265,7 @@ function PackageSelectionScreen({
           {/* Add Custom Package Button */}
           <button
             onClick={() => setShowCustomModal(true)}
-            className="bg-white hover:bg-impostor-cream-dark border-2 border-dashed border-impostor-red rounded-xl p-4 flex flex-col items-center justify-center min-h-32 transition"
+            className="w-full bg-impostor-surface hover:bg-impostor-surface-soft border-2 border-dashed border-impostor-red/60 rounded-xl p-4 flex flex-col items-center justify-center min-h-32 transition"
           >
             <Plus size={28} className="text-impostor-red mb-1" />
             <span className="text-impostor-red font-bold text-center text-xs">
@@ -287,7 +287,7 @@ function PackageSelectionScreen({
       <button
         onClick={handleSubmit}
         disabled={selectedCount === 0}
-        className="w-full bg-impostor-red hover:bg-impostor-red-light disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition flex items-center justify-center gap-2"
+        className="w-full impostor-primary-btn py-4 rounded-xl text-lg flex items-center justify-center gap-2"
       >
         <Check size={20} />
         Iniciar ({selectedCount})

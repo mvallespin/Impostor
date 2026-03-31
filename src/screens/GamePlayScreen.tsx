@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { RotateCcw } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { GameSettings, WordPackage } from '../App'
 
 // Default packages - same as in PackageSelectionScreen
@@ -284,15 +285,22 @@ function GamePlayScreen({
   // Reveal screen - each player sees their word
   if (gameState === 'reveal') {
     return (
-      <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
+      <div className="h-[100dvh] bg-impostor-bg text-impostor-text-on-dark p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden impostor-page-enter">
         <div className="w-full max-w-sm">
-          {showWord ? (
-            <>
+          <AnimatePresence mode="wait">
+            {showWord ? (
+              <motion.div
+                key="show-word"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
               <div className="bg-white rounded-2xl p-6 text-center border-2 border-impostor-red mb-4">
                 {isImpostor ? (
                   <div>
                     <p className="text-impostor-text-secondary text-sm font-semibold mb-2">TÚ ERES</p>
-                    <p className="text-5xl font-black text-impostor-red">IMPOSTOR</p>
+                    <p className="text-5xl font-black text-red-600">IMPOSTOR</p>
                   </div>
                 ) : (
                   <div>
@@ -304,31 +312,38 @@ function GamePlayScreen({
 
               <button
                 onClick={handleNextPlayer}
-                className="w-full bg-impostor-red hover:bg-impostor-red-light text-white font-bold py-4 rounded-xl text-lg transition"
+                className="w-full impostor-primary-btn py-4 rounded-xl text-lg"
               >
                 Siguiente
               </button>
 
-              <p className="text-impostor-text-secondary text-xs text-center pt-3">
+              <p className="text-impostor-muted text-xs text-center pt-3">
                 {currentPlayerIndex + 1}/{players.length}
               </p>
-            </>
-          ) : (
-            <>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="show-turn"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
               <div className="text-center mb-6">
-                <p className="text-impostor-text-secondary text-sm font-semibold mb-2">Turno de:</p>
+                <p className="text-impostor-muted text-sm font-semibold mb-2">Turno de:</p>
                 <p className="text-5xl font-black text-impostor-red mb-4">{currentPlayer}</p>
-                <p className="text-impostor-text text-base">¿Preparado?</p>
+                <p className="text-impostor-muted text-base">¿Preparado?</p>
               </div>
 
               <button
                 onClick={handleViewWord}
-                className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+                className="w-full impostor-primary-btn py-4 rounded-xl text-lg"
               >
                 Ver Palabra/Rol
               </button>
-            </>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     )
@@ -337,10 +352,15 @@ function GamePlayScreen({
   // Starter screen - show who begins the debate
   if (gameState === 'starter') {
     return (
-      <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
-        <div className="w-full max-w-sm text-center">
+      <div className="h-[100dvh] bg-impostor-bg text-impostor-text-on-dark p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden impostor-page-enter">
+        <motion.div
+          className="w-full max-w-sm text-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+        >
           <h1 className="text-4xl font-bold text-impostor-red mb-4">¡Todos listos!</h1>
-          <p className="text-impostor-text-secondary text-sm font-semibold mb-3">Empieza primero:</p>
+          <p className="text-impostor-muted text-sm font-semibold mb-3">Empieza primero:</p>
 
           <div className="bg-white rounded-2xl p-6 border-2 border-impostor-red mb-5">
             <p className="text-4xl font-black text-impostor-red break-words">{startingPlayer}</p>
@@ -348,11 +368,11 @@ function GamePlayScreen({
 
           <button
             onClick={handleStartDebate}
-            className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+            className="w-full impostor-primary-btn py-4 rounded-xl text-lg"
           >
             Ir al Debate
           </button>
-        </div>
+        </motion.div>
       </div>
     )
   }
@@ -360,17 +380,22 @@ function GamePlayScreen({
   // Debate screen
   if (gameState === 'debate') {
     return (
-      <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
-        <div className="w-full max-w-sm text-center mb-6">
+      <div className="h-[100dvh] bg-impostor-bg text-impostor-text-on-dark p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden impostor-page-enter">
+        <motion.div
+          className="w-full max-w-sm text-center mb-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+        >
           <h1 className="text-4xl font-bold text-impostor-red mb-4">¡En Debate!</h1>
-          <p className="text-impostor-text text-lg">
+          <p className="text-impostor-muted text-lg">
             Identificad al Impostor
           </p>
-        </div>
+        </motion.div>
 
         <button
           onClick={handleRevealImpostor}
-          className="w-full max-w-sm bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+          className="w-full max-w-sm impostor-primary-btn py-4 rounded-xl text-lg"
         >
           Desvelar Impostor
         </button>
@@ -380,30 +405,35 @@ function GamePlayScreen({
 
   // Results screen
   return (
-    <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
-      <div className="w-full max-w-sm text-center mb-6">
+    <div className="h-[100dvh] bg-impostor-bg text-impostor-text-on-dark p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden impostor-page-enter">
+      <motion.div
+        className="w-full max-w-sm text-center mb-6"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22 }}
+      >
         <h1 className="text-4xl font-bold text-impostor-red mb-4">¡Fin de Ronda!</h1>
         
-        <p className="text-impostor-text-secondary text-sm font-semibold mb-2">El Impostor:</p>
+        <p className="text-impostor-muted text-sm font-semibold mb-2">El Impostor:</p>
         <div className="bg-impostor-red text-white rounded-xl p-4 mb-3">
           <p className="text-3xl font-black">{impostorIndices.map(idx => players[idx]).join(', ')}</p>
         </div>
-        <p className="text-impostor-text text-base">
+        <p className="text-impostor-muted text-base">
           Palabra: <span className="font-bold text-impostor-red">{currentWord}</span>
         </p>
-      </div>
+      </motion.div>
 
       <div className="space-y-2 w-full max-w-sm">
         <button
           onClick={handlePlayAgain}
-          className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition flex items-center justify-center gap-2"
+          className="w-full impostor-primary-btn py-4 rounded-xl text-lg flex items-center justify-center gap-2"
         >
           <RotateCcw size={20} />
           Jugar de Nuevo
         </button>
         <button
           onClick={onBack}
-          className="w-full bg-white hover:bg-impostor-cream-dark border border-impostor-red text-impostor-red font-bold py-3 rounded-xl text-base transition"
+          className="w-full impostor-secondary-btn py-3 rounded-xl text-base"
         >
           Volver al Menú
         </button>

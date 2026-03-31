@@ -79,7 +79,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-impostor-cream">
+    <div className="min-h-screen bg-impostor-bg">
       {currentScreen === 'settings' && (
         <GameSettingsScreen
           sessionId={sessionId}
