@@ -31,12 +31,9 @@ function PackageCard({ package: pkg, isSelected, onToggle }: PackageCardProps) {
       }`}
     >
       <div className="text-4xl mb-3">{icon}</div>
-      <h3 className={`font-bold text-sm mb-2 ${isSelected ? 'text-impostor-bg' : 'text-impostor-text-on-dark'}`}>
+      <h3 className={`font-bold text-sm ${isSelected ? 'text-impostor-bg' : 'text-impostor-text-on-dark'}`}>
         {pkg.name}
       </h3>
-      <p className={`text-xs ${isSelected ? 'text-impostor-bg/80' : 'text-impostor-muted'}`}>
-        {pkg.words.length} palabras
-      </p>
 
       {isSelected && (
         <div className="absolute top-2 right-2 bg-impostor-bg rounded-full p-1">
