@@ -15,6 +15,7 @@ const PACKAGE_ICONS: Record<string, string> = {
   food: '🍕',
   general: '🌍',
   famous: '⭐',
+  footballers: '⚽',
 }
 
 function PackageCard({ package: pkg, isSelected, onToggle }: PackageCardProps) {

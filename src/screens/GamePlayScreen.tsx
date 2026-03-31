@@ -135,6 +135,28 @@ const DEFAULT_PACKAGES: WordPackage[] = [
     isCustom: false,
     selected: false,
   },
+  {
+    id: 'footballers',
+    name: 'Futbolistas',
+    words: [
+      'Vinícius Jr', 'Jude Bellingham', 'Kylian Mbappé', 'Robert Lewandowski', 'Lamine Yamal', 'Antoine Griezmann', 'Pedri', 'Fede Valverde', 'Rodrygo', 'Luka Modric',
+      'Nico Williams', 'Jan Oblak', 'Thibaut Courtois', 'Dani Carvajal', 'Gavi', 'Ferran Torres', 'Julián Álvarez', 'Kroos', 'Raphinha', 'Dean Huijsen',
+      'Koundé', 'Borja Iglesias', 'Araujo', 'Arda Güler', 'Endrick', 'Gonzalo García', 'Nico Paz', 'Pau Cubarsi', 'Fermín', 'Dani Olmo',
+      'Erling Haaland', 'Kevin De Bruyne', 'Mohamed Salah', 'Bukayo Saka', 'Phil Foden', 'Virgil van Dijk', 'Marcus Rashford', 'Bruno Fernandes', 'Cole Palmer', 'Enzo Fernández',
+      'Son Heung-min', 'Alisson Becker', 'Declan Rice', 'Martin Ødegaard', 'Bernardo Silva', 'Trent Alexander-Arnold', 'Jack Grealish', 'Casemiro', 'Luis Díaz', 'Lautaro Martínez',
+      'Rafael Leão', 'Paulo Dybala', 'Khvicha Kvaratskhelia', 'Harry Kane', 'Jamal Musiala', 'Florian Wirtz', 'Manuel Neuer', 'Thomas Müller', 'Michael Olise', 'Alphonso Davies',
+      'Unai Simón', 'Joan Garcia', 'Ousmane Dembélé', 'Achraf Hakimi', 'Bradley Barcola', 'Désiré Doué', 'Vitinha', 'Leo Messi', 'Cristiano Ronaldo', 'Neymar Jr',
+      'Karim Benzema', 'Luis Suárez', 'Sergio Busquets', 'Jordi Alba', "N'Golo Kanté", 'Sadio Mané', 'Riyad Mahrez', 'Roberto Firmino', 'Aymeric Laporte', 'Marcelo',
+      'James Rodríguez', 'Ángel Di María', 'Hulk', 'Zinedine Zidane', 'Ronaldinho', 'David Beckham', 'Ronaldo Nazário', 'Kaká', 'Iker Casillas', 'Carles Puyol',
+      'Xavi Hernández', 'Andrés Iniesta', 'David Villa', 'Fernando Torres', 'Raúl González', 'Gerard Piqué', 'Sergio Ramos', 'Sergio Agüero', 'Zlatan Ibrahimović', 'Gareth Bale',
+      'Wayne Rooney', 'Thierry Henry', 'Steven Gerrard', 'Arjen Robben', 'Franck Ribéry', 'Mesut Özil', 'Francesco Totti', 'Andrea Pirlo', 'Alessandro Del Piero', 'Gianluigi Buffon',
+      'Roberto Carlos', 'Cafú', 'Paolo Maldini', 'Rio Ferdinand', 'Petr Čech', 'Didier Drogba', "Samuel Eto'o", 'Luis Figo', 'Michael Owen', 'Pavel Nedvěd',
+      'Miroslav Klose', 'Philipp Lahm', 'Bastian Schweinsteiger', 'Cesc Fàbregas', 'Xabi Alonso', 'Guti', 'Joaquín', 'David Silva', 'Eden Hazard', 'Pelé',
+      'Diego Maradona', 'Johan Cruyff', 'Alfredo Di Stéfano', 'Franz Beckenbauer', 'Eusébio', 'George Best', 'Garrincha', 'Bobby Charlton', 'Lev Yashin',
+    ],
+    isCustom: false,
+    selected: false,
+  },
 ]
 
 interface GamePlayScreenProps {
@@ -150,14 +172,14 @@ function GamePlayScreen({
   packages,
   onBack,
 }: GamePlayScreenProps) {
-  const [gameState, setGameState] = useState<'reveal' | 'debate' | 'results'>('reveal')
+  const [gameState, setGameState] = useState<'reveal' | 'starter' | 'debate' | 'results'>('reveal')
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0)
   const [impostorIndices, setImpostorIndices] = useState<number[]>([])
   const [currentWord, setCurrentWord] = useState('')
   const [isImpostor, setIsImpostor] = useState(false)
   const [showWord, setShowWord] = useState(false)
   const [allWords, setAllWords] = useState<string[]>([])
-  const [playerIndices, setPlayerIndices] = useState<number[]>([])
+  const [startingPlayerIndex, setStartingPlayerIndex] = useState(0)
 
   // Get player list
   const players = settings.players.length > 0 
@@ -197,20 +219,14 @@ function GamePlayScreen({
     }
     setImpostorIndices(indices)
 
-    // Create shuffled player order starting from random player
-    const randomStart = Math.floor(Math.random() * players.length)
-    const shuffled = []
-    for (let i = 0; i < players.length; i++) {
-      shuffled.push((randomStart + i) % players.length)
-    }
-    setPlayerIndices(shuffled)
+    // Keep reveal order fixed by registration order
     setCurrentPlayerIndex(0)
   }, [settings, packages, selectedPackageIds])
 
 
-  const currentPlayerIdx = playerIndices[currentPlayerIndex]
-  const currentPlayer = players[currentPlayerIdx]
-  const currentIsImpostor = impostorIndices.includes(currentPlayerIdx)
+  const currentPlayer = players[currentPlayerIndex]
+  const currentIsImpostor = impostorIndices.includes(currentPlayerIndex)
+  const startingPlayer = players[startingPlayerIndex] ?? players[0]
 
   const handleViewWord = useCallback(() => {
     setIsImpostor(currentIsImpostor)
@@ -222,12 +238,17 @@ function GamePlayScreen({
     setIsImpostor(false)
 
     // Check if all players have seen their role
-    if (currentPlayerIndex === playerIndices.length - 1) {
-      // All players have seen their role, start debate
-      setGameState('debate')
+    if (currentPlayerIndex === players.length - 1) {
+      // All players have seen their role, show starter screen
+      setStartingPlayerIndex(Math.floor(Math.random() * players.length))
+      setGameState('starter')
     } else {
       setCurrentPlayerIndex(prev => prev + 1)
     }
+  }
+
+  const handleStartDebate = () => {
+    setGameState('debate')
   }
 
   const handleRevealImpostor = () => {
@@ -252,14 +273,10 @@ function GamePlayScreen({
     }
     setImpostorIndices(indices)
 
-    // Shuffle player order again
-    const randomStart = Math.floor(Math.random() * players.length)
-    const shuffled = []
-    for (let i = 0; i < players.length; i++) {
-      shuffled.push((randomStart + i) % players.length)
-    }
-    setPlayerIndices(shuffled)
+    // Keep reveal order fixed by registration order
     setCurrentPlayerIndex(0)
+    setShowWord(false)
+    setIsImpostor(false)
 
     setGameState('reveal')
   }
@@ -289,11 +306,11 @@ function GamePlayScreen({
                 onClick={handleNextPlayer}
                 className="w-full bg-impostor-red hover:bg-impostor-red-light text-white font-bold py-4 rounded-xl text-lg transition"
               >
-                {currentPlayerIndex === playerIndices.length - 1 ? 'Iniciar Debate' : 'Siguiente'}
+                Siguiente
               </button>
 
               <p className="text-impostor-text-secondary text-xs text-center pt-3">
-                {currentPlayerIndex + 1}/{playerIndices.length}
+                {currentPlayerIndex + 1}/{players.length}
               </p>
             </>
           ) : (
@@ -312,6 +329,29 @@ function GamePlayScreen({
               </button>
             </>
           )}
+        </div>
+      </div>
+    )
+  }
+
+  // Starter screen - show who begins the debate
+  if (gameState === 'starter') {
+    return (
+      <div className="h-[100dvh] bg-impostor-cream p-4 pb-[calc(env(safe-area-inset-bottom)+12px)] flex flex-col justify-center items-center overflow-hidden">
+        <div className="w-full max-w-sm text-center">
+          <h1 className="text-4xl font-bold text-impostor-red mb-4">¡Todos listos!</h1>
+          <p className="text-impostor-text-secondary text-sm font-semibold mb-3">Empieza primero:</p>
+
+          <div className="bg-white rounded-2xl p-6 border-2 border-impostor-red mb-5">
+            <p className="text-4xl font-black text-impostor-red break-words">{startingPlayer}</p>
+          </div>
+
+          <button
+            onClick={handleStartDebate}
+            className="w-full bg-impostor-red hover:bg-impostor-red-light active:scale-95 text-white font-bold py-4 rounded-xl text-lg transition"
+          >
+            Ir al Debate
+          </button>
         </div>
       </div>
     )
